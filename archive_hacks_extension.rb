@@ -12,16 +12,27 @@ class ArchiveHacksExtension < Radiant::Extension
   def activate
     # admin.tabs.add "Archive Hacks", "/admin/archive_hacks", :after => "Layouts", :visibility => [:all]
 
+    # Hacking ArchivePage class
+    # Use groupping from Radiant::Config['archive.group'], default '%Y/%m'
+    # Don't use groupping for pages with slug, accepted by Radiant::Config['archive.nogroup'], default '\.(.*)'
     ArchivePage.class_eval do # Hacking ArchivePage class
 
-      # Use groupping from Radiant::Config
       def child_url(child)
         date = child.published_at || Time.now
-        clean_url "#{ url }/#{ date.strftime archive_groupping }/#{ child.slug }"
+
+        if nogroup_slug = option_nogroup.match( child.slug )
+          clean_url "#{ url }/#{ nogroup_slug[1] }"
+        else
+          clean_url "#{ url }/#{ date.strftime option_group }/#{ child.slug }"
+        end
       end
 
-      def archive_groupping        
-        Radiant::Config['archive.groupping'] || Radiant::Config['archive.groupping'] = '%Y/%m'
+      def option_group
+        Radiant::Config['archive.group'] || Radiant::Config['archive.group'] = '%Y/%m'
+      end
+
+      def option_nogroup
+        Regexp.new( "^#{Radiant::Config['archive.nogroup'] || Radiant::Config['archive.nogroup'] = '\.(.*)'}$" )
       end
 
     end

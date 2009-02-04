@@ -1,3 +1,9 @@
 = Archive Hacks
 
-Description goes here
+Some hacks for standart archive extensions, improving its usability:
+
+* Storing archive group pattern in Radiant::Config
+* Ability to skip groupping of some pages in archive
+* Fixed bug when archive is a root page
+
+Copyright (c) 2009 Alexey Noskov

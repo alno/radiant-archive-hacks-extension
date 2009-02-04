@@ -2,15 +2,10 @@ require_dependency 'application'
 
 class ArchiveHacksExtension < Radiant::Extension
   version "1.0"
-  description "Describe your extension here"
+  description "Some hacks for standart archive extensions, improving its usability"
   url "http://github.com/alno/radiant-archive-hacks-extension"
-  
-  # define_routes do |map|
-  #   map.connect 'admin/archive_hacks/:action', :controller => 'admin/archive_hacks'
-  # end
-  
+    
   def activate
-    # admin.tabs.add "Archive Hacks", "/admin/archive_hacks", :after => "Layouts", :visibility => [:all]
 
     # Hacking ArchivePage class
     # Use groupping from Radiant::Config['archive.group'], default '%Y/%m'
@@ -35,11 +30,20 @@ class ArchiveHacksExtension < Radiant::Extension
         Regexp.new( "^#{Radiant::Config['archive.nogroup'] || Radiant::Config['archive.nogroup'] = '\.(.*)'}$" )
       end
 
+      # Fixing placement archive as root page
+
+      alias_method :old_find_by_url, :find_by_url
+
+      # This method differs from original only by default value of last argument
+      def find_by_url(url, live = true, clean = true)
+        old_find_by_url(url, live, clean)
+      end
+
     end
+
   end
   
   def deactivate
-    # admin.tabs.remove "Archive Hacks"
   end
   
 end

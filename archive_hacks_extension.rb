@@ -1,9 +1,7 @@
-require_dependency 'application'
-
 class ArchiveHacksExtension < Radiant::Extension
   version "1.0"
   description "Some hacks for standart archive extension, improving it usability"
-  url "http://alno.name"
+  url "https://github.com/alno/radiant-archive-hacks-extension/"
     
   def activate
     Radiant::Config['archive.group'] = '%Y/%m/%d' unless Radiant::Config['archive.group']
@@ -25,11 +23,11 @@ class ArchiveHacksExtension < Radiant::Extension
       end
 
       def option_group
-        Radiant::Config['archive.group']
+        @@option_group ||= Radiant::Config['archive.group']
       end
 
       def option_nogroup
-        Regexp.new( Radiant::Config['archive.nogroup'] )
+        @@option_nogroup ||= Regexp.new( Radiant::Config['archive.nogroup'] )
       end
 
       # Fixing placement archive as root page
